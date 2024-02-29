@@ -1,0 +1,29 @@
+---
+- name: Download Binary from GitHub and extract it
+  unarchive:
+    src: https://github.com/polytope-labs/hyperbridge/releases/download/v{{ version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz
+    dest: /usr/local/bin/hyperbridge-node
+    remote_src: yes
+
+- name: Git clone the Repo
+  ansible.builtin.git:
+    repo: https://github.com/polytope-labs/hyperbridge
+    dest: /home/{{ system_user }}/hyperbridge
+
+- name: create systemd Service
+  template:
+    src: ./roles/hyperbridge-node/templates/systemd.j2
+    dest: /etc/systemd/system/hyperbridge-node.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd to read new service
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start hyperbridge service
+  systemd:
+    name: "hyperbridge-node"
+    enabled: yes
+    state: started

@@ -1,0 +1,30 @@
+[Unit]
+Description=Hyperbridge-Node Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ system_username }}
+
+
+ExecStart=/usr/local/bin/hyperbridge-node \
+            --chain=gargantua \
+            --name={{ hyperbridge_username }} \
+            --database=paritydb \
+            --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1'
+            --pruning=archive \
+            --enable-offchain-indexing=true \
+            --base-path /home/{{ system_user }}/hyperbridge \
+            --pruning-archive \ 
+            -- \
+            --state-pruning 100 \
+            --blocks-pruning 100 \
+            --sync fast-unsafe 
+    
+Restart=on-failure
+
+TimeoutSec=infinity
+RestartSec=10
+[Install]
+WantedBy=multi-user.target
