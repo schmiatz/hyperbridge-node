@@ -15,7 +15,7 @@ ExecStart=/usr/local/bin/hyperbridge-node \
             --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1'
             --pruning=archive \
             --enable-offchain-indexing=true \
-            --base-path /home/{{ system_user }}/hyperbridge \
+            --base-path /home/{{ system_username }}/hyperbridge \
             --pruning-archive \ 
             -- \
             --state-pruning 100 \

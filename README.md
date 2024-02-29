@@ -1,5 +1,5 @@
 # What does this Repo?
-This Repo contains an ansible Playbook, that will install two instances of a Kusama Validator on your Debian/Ubuntu Server.
+This Repo contains an ansible Playbook, that will install a Hyperbridge Node on your Debian/Ubuntu Server.
 
 # How to use this Playbook?
 

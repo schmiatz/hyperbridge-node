@@ -1,14 +1,26 @@
 ---
+- name: check if binary already exists in the desired version
+  shell: "/usr/local/bin/hyperbridge-node --version | cut -d' ' -f2 | cut -d'-' -f1"
+  ignore_errors: yes
+  register: check
+
 - name: Download Binary from GitHub and extract it
   unarchive:
     src: https://github.com/polytope-labs/hyperbridge/releases/download/v{{ version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz
-    dest: /usr/local/bin/hyperbridge-node
+    dest: /home/{{ system_username }}/
     remote_src: yes
+  when: not check.stdout == version
+  register: downloaded
+
+- name: move binary
+  shell: "mv /home/{{ system_username }}/hyperbridge-x86_64-unknown-linux-gnu/hyperbridge /usr/local/bin/hyperbridge-node"
+  when: downloaded.changed
 
 - name: Git clone the Repo
-  ansible.builtin.git:
-    repo: https://github.com/polytope-labs/hyperbridge
-    dest: /home/{{ system_user }}/hyperbridge
+  git:
+    repo: https://github.com/polytope-labs/hyperbridge.git
+    dest: /home/{{ system_username }}/hyperbridge
+    recursive: false 
 
 - name: create systemd Service
   template:
@@ -17,13 +29,21 @@
     owner: root
     group: root
     mode: '0644'
+  register: service
 
 - name: Reload systemd to read new service
   systemd:
     daemon_reload: yes
+  when: service.changed
 
 - name: Enable and start hyperbridge service
   systemd:
     name: "hyperbridge-node"
     enabled: yes
     state: started
+
+- name: restart hyperbridge service
+  systemd: 
+    name: "hyperbridge-node"
+    state: restarted
+  when: not check.stdout == version
