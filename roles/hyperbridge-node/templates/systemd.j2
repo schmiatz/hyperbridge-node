@@ -12,15 +12,12 @@ ExecStart=/usr/local/bin/hyperbridge-node \
             --chain=gargantua \
             --name={{ hyperbridge_username }} \
             --database=paritydb \
-            --telemetry-url 'wss://telemetry.polkadot.io/submit/ 1'
+            --telemetry-url 'wss://telemetry.polkadot.io/submit 1' \
+            --telemetry-url 'wss://telemetry.blockops.network/submit 1' \
             --pruning=archive \
             --enable-offchain-indexing=true \
             --base-path /home/{{ system_username }}/hyperbridge \
-            --pruning-archive \ 
-            -- \
-            --state-pruning 100 \
-            --blocks-pruning 100 \
-            --sync fast-unsafe 
+            -- --sync fast-unsafe --chain=rococo --execution wasm
     
 Restart=on-failure
 

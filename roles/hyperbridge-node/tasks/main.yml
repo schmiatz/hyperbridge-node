@@ -22,6 +22,14 @@
     dest: /home/{{ system_username }}/hyperbridge
     recursive: false 
 
+- name: assure permissions for user "{{ system_username }}" for the cloned Repo
+  file:
+    path: /home/{{ system_username }}/hyperbridge
+    owner: "{{ system_username }}"
+    group: "{{ system_username }}"
+    mode: '0755'
+    state: directory
+
 - name: create systemd Service
   template:
     src: ./roles/hyperbridge-node/templates/systemd.j2
@@ -46,4 +54,4 @@
   systemd: 
     name: "hyperbridge-node"
     state: restarted
-  when: not check.stdout == version
+  when: not check.stdout == version or service.changed
