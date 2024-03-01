@@ -53,3 +53,6 @@ ansible_host: 192.168.1.10
 # Run the Playbook
 ## Execute Ansible
 cd into this Repo and run the Playbook with 'ansible-playbook playbook.yml'
+
+## Check your Machine after the run
+Have a look in the logs of your newly created Services with 'journalctl -fu hyperbridge-node' .   
