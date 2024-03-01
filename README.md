@@ -25,14 +25,14 @@ system_username: hyperbridge
 
 #### hyperbridge_username
 Thats the Name your Hyperbridge Node and its systemd services will have.   
-Open this website, switch to Kusama and check if your desired Validator Names arent already taken:
+Open this website, switch to Hyperbridge and check if your desired Names arent already taken:
 [Telemtery Polkadot](https://telemetry.polkadot.io/#list/0x19c5b43935ee2a7e4a090e2bde16ea106bcb1b3668a9abcd37bbceb8c9df16d4)
 ```
 hyperbridge_username: some-name-you-like
 ```
 
 #### version
-Thats the Version you want to run for the Validatpor.
+Thats the Version you want to run for the Hyperbridge Node.
 Check whats the latest Version here [GitHub Hyperbridge](https://github.com/polytope-labs/hyperbridge).    
 You dont need to write the 'v' of the beginning of your Version!
 ```
