@@ -49,9 +49,10 @@
     name: "hyperbridge-node"
     enabled: yes
     state: started
+  register: started
 
 - name: restart hyperbridge service
   systemd: 
     name: "hyperbridge-node"
     state: restarted
-  when: not check.stdout == version or service.changed
+  when: not check.stdout == version or service.changed and not started.changed
