@@ -1,5 +1,5 @@
 # What does this Repo?
-This Repo contains an ansible Playbook, that will install a Hyperbridge Node on your Debian/Ubuntu Server.
+This Repo contains an ansible Playbook, that will install a Hyperbridge Node on your Ubuntu 22.04 Server.
 
 # How to use this Playbook?
 
@@ -24,7 +24,7 @@ system_username: hyperbridge
 ```
 
 #### hyperbridge_username
-Thats the Name your Hyperbridge Node and its systemd services will have.   
+Thats the Name your Hyperbridge Node and its systemd service will have.   
 Open this website, switch to Hyperbridge and check if your desired Names arent already taken:
 [Telemtery Polkadot](https://telemetry.polkadot.io/#list/0x19c5b43935ee2a7e4a090e2bde16ea106bcb1b3668a9abcd37bbceb8c9df16d4)
 ```
@@ -56,3 +56,6 @@ cd into this Repo and run the Playbook with 'ansible-playbook playbook.yml'
 
 ## Check your Machine after the run
 Have a look in the logs of your newly created Services with 'journalctl -fu hyperbridge-node' .   
+
+# How to update my hyperbridge-node?
+Just replace your 'version' varibale in the 'gropu_vars/all.yml' file with your desired Version and run the Playbook again.
