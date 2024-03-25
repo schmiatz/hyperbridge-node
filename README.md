@@ -58,4 +58,4 @@ cd into this Repo and run the Playbook with 'ansible-playbook playbook.yml'
 Have a look in the logs of your newly created Services with 'journalctl -fu hyperbridge-node' .   
 
 # How to update my hyperbridge-node?
-Just replace your 'version' varibale in the 'group_vars/all.yml' file with your desired Version and run the Playbook again.
+Just replace your 'version' variable in the 'group_vars/all.yml' file with your desired Version and run the Playbook again.
