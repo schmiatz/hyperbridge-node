@@ -1,0 +1,8 @@
+---
+- name: Ensure the service is enabled and restarted
+  ansible.builtin.systemd:
+    name: hyperbridge-node
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+  listen: restart_service

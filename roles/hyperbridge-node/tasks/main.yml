@@ -1,4 +1,18 @@
 ---
+- name: Install required packages
+  apt:
+    name:
+      - git
+      - clang
+      - curl
+      - libssl-dev
+      - llvm
+      - libudev-dev
+      - make
+      - protobuf-compiler
+    state: present
+    update_cache: yes
+
 - name: check if binary already exists in the desired version
   shell: "/usr/local/bin/hyperbridge-node --version | cut -d' ' -f2 | cut -d'-' -f1"
   ignore_errors: yes
@@ -6,29 +20,32 @@
 
 - name: Download Binary from GitHub and extract it
   unarchive:
-    src: https://github.com/polytope-labs/hyperbridge/releases/download/v{{ version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz
+    src: https://github.com/polytope-labs/hyperbridge/releases/download/{{ version }}/hyperbridge-x86_64-unknown-linux-gnu.tar.gz
     dest: /home/{{ system_username }}/
     remote_src: yes
   when: not check.stdout == version
   register: downloaded
 
-- name: move binary
-  shell: "mv /home/{{ system_username }}/hyperbridge-x86_64-unknown-linux-gnu/hyperbridge /usr/local/bin/hyperbridge-node"
-  when: downloaded.changed
-
-- name: Git clone the Repo
-  git:
-    repo: https://github.com/polytope-labs/hyperbridge.git
-    dest: /home/{{ system_username }}/hyperbridge
-    recursive: false 
-
-- name: assure permissions for user "{{ system_username }}" for the cloned Repo
-  file:
-    path: /home/{{ system_username }}/hyperbridge
-    owner: "{{ system_username }}"
-    group: "{{ system_username }}"
+- name: Copy binary file if it differs
+  copy:
+    src: /home/{{ system_username }}/hyperbridge-x86_64-unknown-linux-gnu/hyperbridge
+    dest: /usr/local/bin/hyperbridge-node
     mode: '0755'
-    state: directory
+    remote_src: true
+
+# - name: Git clone the Repo
+#   git:
+#     repo: https://github.com/polytope-labs/hyperbridge.git
+#     dest: /home/{{ system_username }}/hyperbridge
+#     recursive: false 
+
+# - name: assure permissions for user "{{ system_username }}" for the cloned Repo
+#   file:
+#     path: /home/{{ system_username }}/hyperbridge
+#     owner: "{{ system_username }}"
+#     group: "{{ system_username }}"
+#     mode: '0755'
+#     state: directory
 
 - name: create systemd Service
   template:
@@ -37,22 +54,4 @@
     owner: root
     group: root
     mode: '0644'
-  register: service
-
-- name: Reload systemd to read new service
-  systemd:
-    daemon_reload: yes
-  when: service.changed
-
-- name: Enable and start hyperbridge service
-  systemd:
-    name: "hyperbridge-node"
-    enabled: yes
-    state: started
-  register: started
-
-- name: restart hyperbridge service
-  systemd: 
-    name: "hyperbridge-node"
-    state: restarted
-  when: not check.stdout == version or service.changed and not started.changed
+  notify: restart_service
